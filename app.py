@@ -42,7 +42,7 @@ else:
 st.dataframe(df_mostrar, use_container_width=True)
 
 # ==========================================
-# 3. ENCABEZADO PARA EL ANÁLISIS GRÁFICO (Versión Casillas)
+# 3. ENCABEZADO PARA EL ANÁLISIS GRÁFICO (con casillas)
 # ==========================================
 st.header("Análisis Visual de Tendencias")
 st.write("Selecciona una o ambas casillas de verificación para desplegar los gráficos interactivos basados en los datos filtrados. (づᴗ _ᴗ)づ♡.")
@@ -89,3 +89,49 @@ if mostrar_dispersion:
 # 3. Si no hay ninguna casilla seleccionada, dejamos un mensaje de guía
 if not mostrar_histograma and not mostrar_dispersion:
     st.write("*Por favor, selecciona alguna casilla de verificación para visualizar un gráfico. ദ്ദി◝ ⩊ ◜.ᐟ*")
+
+# =============================================================
+# 4. ENCABEZADO: COMPARATIVA AVANZADA ENTRE DOS MARCAS
+# =============================================================
+st.header("Comparador de Distribución de Precios entre Marcas")
+st.write("Selecciona dos marcas específicas de la lista para comparar directamente sus rangos de precios en el mercado.")
+
+# 1. Obtenemos la lista única de marcas disponibles entre los datos y las ordenamos.
+lista_marcas = sorted(df_celulares['phone_brand'].unique())
+
+# 2. Creamos dos columnas para colocar los menús desplegables lado a lado
+col_marca1, col_marca2 = st.columns(2)
+
+with col_marca1:
+    # Menú desplegable para la Marca 1
+    marca_1 = st.selectbox("Selecciona la Marca 1", options=lista_marcas, index=0)
+
+with col_marca2:
+    # Menú desplegable para la Marca 2 (intentamos que por defecto elija otra de la lista)
+    indice_defecto = 1 if len(lista_marcas) > 1 else 0
+    marca_2 = st.selectbox("Selecciona la Marca 2", options=lista_marcas, index=indice_defecto)
+
+# 3. Casilla para normalizar el histograma (pasar a porcentaje)
+normalizar = st.checkbox("Normalizar histograma (Ver en porcentaje %)", value=True)
+
+# 4. Filtramos los datos basándonos estrictamente en las dos marcas elegidas
+df_comparativa = df_celulares[df_celulares['phone_brand'].isin([marca_1, marca_2])]
+
+# 5. Definimos los parámetros dinámicos según la casilla de normalización
+hist_norm_param = 'percent' if normalizar else None
+
+# 6. Construimos el gráfico de plotly superpuesto)
+fig_comp = px.histogram(
+    df_comparativa, 
+    x='price_usd', 
+    color='phone_brand',
+    barmode='overlay',          # Superpone las barras de forma limpia
+    histnorm=hist_norm_param,   # Cambia dinámicamente entre conteo o porcentaje
+    opacity=0.6,                # Transparencia para que se aprecien ambos colores
+    title=f'Distribución de Precios: {marca_1} vs {marca_2}',
+    labels={'price_usd': 'Precio (USD)', 'percent': 'Porcentaje (%)', 'phone_brand': 'Marca'},
+    nbins=25
+)
+
+# 7. Desplegamos el gráfico interactivo en la pantalla web
+st.plotly_chart(fig_comp, use_container_width=True)
