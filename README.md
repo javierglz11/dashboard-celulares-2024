@@ -61,6 +61,6 @@ Esta plataforma cuenta con tres módulos interactivos clave:
    ```   
 
 **URL de la aplicación en Render**
-[Ir a la aplicación desplegada](https://dashboard-phones-2024.onrender.com)
+* [Ir a la aplicación desplegada](https://dashboard-phones-2024.onrender.com)
 
 ---
