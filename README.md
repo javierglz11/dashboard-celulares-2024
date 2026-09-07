@@ -60,4 +60,7 @@ Esta plataforma cuenta con tres módulos interactivos clave:
    streamlit run app.py
    ```   
 
+**URL de la aplicación en Render**
+[Ir a la aplicación desplegada](https://dashboard-phones-2024.onrender.com)
+
 ---
